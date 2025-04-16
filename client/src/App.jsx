@@ -2,8 +2,10 @@ import { Route, Routes } from 'react-router-dom';
 import styled, { ThemeProvider } from "styled-components";
 import Home from './pages/Home';
 import Menu from './components/Menu';
+import Login from "./pages/Login";
 import { useState } from 'react';
 import { darkTheme, lightTheme } from './utils/theme';
+import Video from './pages/Video';
 
 const Container = styled.div`
   display: flex;
@@ -39,6 +41,8 @@ const App = () => {
         <Main className={menuOpen ? "narrow" : "wide"}>
           <Routes>
             <Route index path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/video/:id" element={<Video />} />
           </Routes>
         </Main>
       </Container>

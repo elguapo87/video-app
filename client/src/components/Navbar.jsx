@@ -163,7 +163,7 @@ const StyledLogoutIcon = styled(LogoutIcon)`
 `;
 
 const Navbar = ({ menuOpen, setMenuOpen }) => {
-  const currentUser = true;
+  const currentUser = false;
   
   return (
     <>
@@ -197,7 +197,7 @@ const Navbar = ({ menuOpen, setMenuOpen }) => {
                     </LogoutButton>
                 </User>
                     :
-                <Link to="/signin">
+                <Link to="/login">
                   <Button>
                       <StyledAccountIcon />
                       Sign In
