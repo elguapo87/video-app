@@ -4,7 +4,9 @@ import SearchIcon from "@mui/icons-material/Search"
 import VideoCallOutlinedIcon from "@mui/icons-material/VideoCallOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import LogoutIcon from '@mui/icons-material/Logout';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { url } from '../lib/apiRequest';
+import { useSelector } from 'react-redux';
 
 const Nav = styled.div`
     display: flex;
@@ -15,7 +17,7 @@ const Nav = styled.div`
     padding: 37px max(2.5vw, 10px);
     color: ${({ theme }) => theme.text};
     width: 100%;
-    box-shadow: 0 0 10px ${({theme}) => theme.textSoft};
+    box-shadow: 0 0 10px ${({ theme }) => theme.textSoft};
 `;
 
 const NavLeft = styled.div`
@@ -61,13 +63,13 @@ const Input = styled.input`
     border: 0;
     outline: 0;
     background: transparent;
-    color: ${({theme}) => theme.text};
+    color: ${({ theme }) => theme.text};
     font-size: max(1vw, 12px);
 `;
 
 const StyledSearchIcon = styled(SearchIcon)`
     cursor: pointer;
-    color: ${({theme}) => theme.text};
+    color: ${({ theme }) => theme.text};
     
     &.MuiSvgIcon-root {
         width: max(1.8vw, 18px);
@@ -85,7 +87,7 @@ const User = styled.div`
   align-items: center;
   gap: max(0.6vw, 5px);
   font-weight: 500;
-  color: ${({theme}) => theme.text};
+  color: ${({ theme }) => theme.text};
 `;
 
 const StyledVideoIcon = styled(VideoCallOutlinedIcon)`
@@ -163,51 +165,52 @@ const StyledLogoutIcon = styled(LogoutIcon)`
 `;
 
 const Navbar = ({ menuOpen, setMenuOpen }) => {
-  const currentUser = false;
   
+  const { currentUser } = useSelector((state) => state.user);
+  
+    const navigate = useNavigate();
+
   return (
     <>
       <Nav>
         <NavLeft>
-            <MenuIcon src={assets.menu_icon} onClick={() => setMenuOpen(!menuOpen)} />
-            <Link to="/">
-              <ImgContainer>
-                  <LogoImg src={assets.logo} />
-                  <LogoText>PGTube</LogoText>
-              </ImgContainer>
-            </Link>
+          <MenuIcon src={assets.menu_icon} onClick={() => setMenuOpen(!menuOpen)} />
+          <Link to="/">
+            <ImgContainer>
+              <LogoImg src={assets.logo} />
+              <LogoText>PGTube</LogoText>
+            </ImgContainer>
+          </Link>
         </NavLeft>
 
         <SearchBox>
-            <Input placeholder="Search..." />
-            <StyledSearchIcon />
+          <Input placeholder="Search..." />
+          <StyledSearchIcon />
         </SearchBox>
 
         <NavRight>
-            {
-                currentUser
-                    ?
-                <User>
-                    <StyledVideoIcon />
-                    <Avatar src={assets.noavatar} />
-                        <P>John Doe</P>
-                    <LogoutButton>
-                        <StyledLogoutIcon />
-                        Logout
-                    </LogoutButton>
-                </User>
-                    :
-                <Link to="/login">
-                  <Button>
-                      <StyledAccountIcon />
-                      Sign In
-                  </Button>
-                </Link>
-            }
+          {
+            currentUser
+              ?
+              <User>
+                <StyledVideoIcon />
+                <Avatar onClick={() => navigate(`/user/${currentUser._id}`)} src={currentUser?.img ? `${url}/images/${currentUser.img}` : assets.noavatar} />
+                <P>{currentUser.name}</P>
+                <LogoutButton>
+                  <StyledLogoutIcon />
+                  Logout
+                </LogoutButton>
+              </User>
+              :
+              <Link to="/login">
+                <Button>
+                  <StyledAccountIcon />
+                  Sign In
+                </Button>
+              </Link>
+          }
         </NavRight>
       </Nav>
-
-      
     </>
   )
 }
