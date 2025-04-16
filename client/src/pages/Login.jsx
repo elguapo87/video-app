@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styled from "styled-components";
-
+import { useDispatch } from "react-redux";
+import apiRequest from "../lib/apiRequest";
+import { loginFailure, loginStart, loginSuccess } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
@@ -10,7 +12,11 @@ const Container = styled.div`
   justify-content: center;
   height: calc(100vh - 56px);
   color: ${({ theme }) => theme.text};
-`;  
+
+  @media (max-width: 750px) {
+    
+  }
+`;
 
 const Wrapper = styled.div`
   display: flex;
@@ -98,49 +104,102 @@ const CancelImage = styled.p`
   cursor: pointer;
 `;
 
-const SignIn = () => {
+const Login = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [img, setImg] = useState(null);
+  const dispatch = useDispatch();
+  const [loginError, setLoginError] = useState("");
+  const [signInError, setSignInError] = useState("");
+  const imageInputRef = useRef(null);
 
-    const [img, setImg] = useState(null);
-    const [loginError, setLoginError] = useState("");
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
-    return (
-        <Container>
-            <Wrapper>
-                <Close onClick={() => navigate("/")}>X</Close>
-                <Title>Sign in</Title>
-                <SubTitle>to subscribe to PGTube</SubTitle>
-                <Input placeholder="username" onChange={(e) => setName(e.target.value)} />
-                <Input type="password" placeholder="password" onChange={(e) => setPassword(e.target.value)} />
-                {loginError && <span className="error-message">{loginError}</span>}
-                <Button>Sign in</Button>
-                <Title>or</Title>
-                <Button>Signin with google</Button>
-                <Title>or</Title>
-                <ProfileImageContainer>
-                  {img && <ProfileImage src={URL.createObjectURL(img)} />}
-                  {img && <CancelImage onClick={handleCancelImage}>x</CancelImage>}  
-                </ProfileImageContainer>
-                <ImageInput onChange={(e) => setImg(e.target.files[0])} type="file" accept="image/*" id="image" />
-                <Input placeholder="username" onChange={(e) => setName(e.target.value)} />
-                <Input placeholder="email" onChange={(e) => setEmail(e.target.value)} />
-                <Input type="password" onChange={(e) => setPassword(e.target.value)} placeholder="password" />
-                <Button>Sign up</Button>
-            </Wrapper>
+    dispatch(loginStart());
 
-            <More>
-                English(USA)
-                <Links>
-                    <Link>Help</Link>
-                    <Link>Privacy</Link>
-                    <Link>Terms</Link>
-                </Links>
-            </More>
-        </Container>
-    )
+    try {
+      const res = await apiRequest.post("/auth/signin", {
+        name,
+        password
+      });
+      dispatch(loginSuccess(res.data));
+      navigate("/");
+
+    } catch (err) {
+      dispatch(loginFailure());
+      setLoginError(err.response.data.message);
+    }
+  };
+
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("email", email),
+      formData.append("password", password);
+    if (img) {
+      formData.append("image", img);
+    }
+
+    try {
+      await apiRequest.post("/auth/signup", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      handleLogin(e);
+
+    } catch (err) {
+      setSignInError(err.response.data.message);
+    }
+  };
+
+  const handleCancelImage = () => {
+    setImg(null);
+    imageInputRef.current.value = "";
+  };
+
+  return (
+    <Container>
+      <Wrapper>
+        <Close onClick={() => navigate("/")}>X</Close>
+        <Title>Sign in</Title>
+        <SubTitle>to subscribe to PGTube</SubTitle>
+        <Input placeholder="username" onChange={(e) => setName(e.target.value)} />
+        <Input type="password" placeholder="password" onChange={(e) => setPassword(e.target.value)} />
+        {loginError && <span className="error-message">{loginError}</span>}
+        <Button onClick={handleLogin}>Sign in</Button>
+        <Title>or</Title>
+        <Button>Signin with google</Button>
+        <Title>or</Title>
+        <ProfileImageContainer>
+          {img && <ProfileImage src={URL.createObjectURL(img)} />}
+          {img && <CancelImage onClick={handleCancelImage}>x</CancelImage>}
+        </ProfileImageContainer>
+        <ImageInput ref={imageInputRef} onChange={(e) => setImg(e.target.files[0])} type="file" accept="image/*" id="image" />
+        <Input placeholder="username" onChange={(e) => setName(e.target.value)} />
+        <Input placeholder="email" onChange={(e) => setEmail(e.target.value)} />
+        <Input type="password" onChange={(e) => setPassword(e.target.value)} placeholder="password" />
+        {signInError && <span className="error-message">{signInError}</span>}
+        <Button onClick={handleSignUp}>Sign up</Button>
+      </Wrapper>
+
+      <More>
+        English(USA)
+        <Links>
+          <Link>Help</Link>
+          <Link>Privacy</Link>
+          <Link>Terms</Link>
+        </Links>
+      </More>
+    </Container>
+  )
 }
 
-export default SignIn
+export default Login
 
 
