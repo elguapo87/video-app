@@ -13,6 +13,7 @@ import VideoCameraBackOutlinedIcon from '@mui/icons-material/VideoCameraBackOutl
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SettingsBrightnessOutlinedIcon from "@mui/icons-material/SettingsBrightnessOutlined";
 import { Link } from "react-router-dom";
+import Navbar from "./Navbar";
 
 
 const MenuWrapper = styled.div`
@@ -27,6 +28,8 @@ const MenuWrapper = styled.div`
 
 
 const Container = styled.div`
+    background: ${({ theme }) => theme.bg};
+    color: ${({ theme }) => theme.text};
     font-size: max(1vw, 12px);
     width: 15vw;
     padding-top: max(3.5vw, 50px);
@@ -40,10 +43,15 @@ const Item = styled.div`
   gap: max(0.8vw, 5px);
   cursor: pointer;
   padding: max(0.5vw, 3px) 0px;
+
+  &:hover {
+    background: ${({theme}) => theme.soft};
+  }
 `;
 
 const Hr = styled.hr`
   margin: max(1vw, 5px) 0px;
+  border: 0.5px solid ${({ theme }) => theme.soft};
   width: 100%;
 `;
 
@@ -80,104 +88,106 @@ const Title = styled.h2`
   margin-bottom: max(1vw, 5px);
 `;
 
-const Menu = () => {
+const Menu = ({ darkMode, setDarkMode, menuOpen, setMenuOpen }) => {
     const currentUser = false;
 
     return (
         <>
             <MenuWrapper>
-                <Container>
-                        <Link to="/">
-                            <Item>
-                                <HomeOutlinedIcon />
-                                Home
-                            </Item>
-                        </Link>
-                        <Link to="/trend">
-                            <Item>
-                                <ExploreOutlinedIcon />
-                                Explore
-                            </Item>
-                        </Link>
-                        {
-                            currentUser 
-                                &&
-                            <Link to="/sub">
-                                <Item>
-                                    <SubscriptionsOutlinedIcon />
-                                    Subscriptions
-                                </Item>
-                            </Link>
-                        }
-                        <Hr />
-                        {
-                            currentUser
-                               &&
-                            <Link to="/savedVideos">
-                                <Item>
-                                    <VideoLibraryOutlinedIcon />
-                                    Library
-                                </Item>
-                            </Link>
-                        }
+                <Navbar menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+
+                <Container className={menuOpen ? "mobile-menu active" : "mobile-menu"}>
+                    <Link to="/">
                         <Item>
-                            <HistoryOutlinedIcon />
-                            History
+                            <HomeOutlinedIcon />
+                            Home
                         </Item>
-                        <Hr />
-                        {
-                            !currentUser
-                                &&
-                            <>
+                    </Link>
+                    <Link to="/trend">
+                        <Item>
+                            <ExploreOutlinedIcon />
+                            Explore
+                        </Item>
+                    </Link>
+                    {
+                        currentUser
+                        &&
+                        <Link to="/sub">
+                            <Item>
+                                <SubscriptionsOutlinedIcon />
+                                Subscriptions
+                            </Item>
+                        </Link>
+                    }
+                    <Hr />
+                    {
+                        currentUser
+                        &&
+                        <Link to="/savedVideos">
+                            <Item>
+                                <VideoLibraryOutlinedIcon />
+                                Library
+                            </Item>
+                        </Link>
+                    }
+                    <Item>
+                        <HistoryOutlinedIcon />
+                        History
+                    </Item>
+                    <Hr />
+                    {
+                        !currentUser
+                        &&
+                        <>
                             <Login>
                                 Sign in to like videos, comment and subscribe.
                                 <Link to="/"><Button><StyledAccountIcon />Login</Button></Link>
                             </Login>
                             <Hr />
-                            </>
-                        }
-                        <Title>BEST OF PGTube</Title>
-                        <Link to="/">
-                            <Item>
-                                <LibraryMusicOutlinedIcon />
-                                Music
-                            </Item>
-                        </Link>
-                        <Link to="/">
-                            <Item>
-                                <SportsBasketballOutlinedIcon />
-                                Sports
-                            </Item>
-                        </Link>
-                        <Link to="/">
-                            <Item>
-                                <SportsEsportsOutlinedIcon />
-                                Gaming
-                            </Item>
-                        </Link>
-                        <Link to="/">
-                            <Item>
-                                <MovieOutlinedIcon />
-                                Movies
-                            </Item>
-                        </Link>
-                        <Link to="/">
-                            <Item>
-                                <ArticleOutlinedIcon />
-                                News
-                            </Item>
-                        </Link>
-                        <Link to="/">
-                            <Item>
-                                <VideoCameraBackOutlinedIcon />
-                                Documentary
-                            </Item>
-                        </Link>
-                        <Hr />
+                        </>
+                    }
+                    <Title>BEST OF PGTube</Title>
+                    <Link to="/">
                         <Item>
-                            <SettingsBrightnessOutlinedIcon />
-                            Dark Mode
+                            <LibraryMusicOutlinedIcon />
+                            Music
                         </Item>
+                    </Link>
+                    <Link to="/">
+                        <Item>
+                            <SportsBasketballOutlinedIcon />
+                            Sports
+                        </Item>
+                    </Link>
+                    <Link to="/">
+                        <Item>
+                            <SportsEsportsOutlinedIcon />
+                            Gaming
+                        </Item>
+                    </Link>
+                    <Link to="/">
+                        <Item>
+                            <MovieOutlinedIcon />
+                            Movies
+                        </Item>
+                    </Link>
+                    <Link to="/">
+                        <Item>
+                            <ArticleOutlinedIcon />
+                            News
+                        </Item>
+                    </Link>
+                    <Link to="/">
+                        <Item>
+                            <VideoCameraBackOutlinedIcon />
+                            Documentary
+                        </Item>
+                    </Link>
+                    <Hr />
+                    <Item onClick={() => setDarkMode(!darkMode)}>
+                        <SettingsBrightnessOutlinedIcon />
+                        {darkMode ? "Light" : "Dark"} Mode
+                    </Item>
                 </Container>
             </MenuWrapper>
         </>
