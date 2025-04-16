@@ -2,6 +2,7 @@ import userModel from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import validator from "validator";
 import { createError } from "../error.js";
+import jwt from "jsonwebtoken";
 
 export const signUp = async (req, res, next) => {
   
@@ -50,6 +51,35 @@ export const signIn = async (req, res, next) => {
 
         res.cookie("access_token", token, { httpOnly: true }).status(200).json(others);
         
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const signOut = async (req, res, next) => {
+    try {
+        res.cookie("access_token", "");
+        res.status(200).json("You are logged out!");
+
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const googleAuth = async (req, res, next) => {
+    try {
+        const user = await userModel.findOne({ email: req.body.email });
+        if (user) {
+            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+            res.cookie("access_token", token, { httpOnly: true }).status(200).json(user._doc);
+
+        } else {
+            const newUser = new userModel({ ...req.body, fromGoogle: true });
+            const savedUser = await newUser.save();
+            const token = jwt.sign({ id: savedUser._id }, process.env.JWT_SECRET);
+            res.cookie("access_token", token, { httpOnly: true }).status(200).json(savedUser._doc);
+        }
+
     } catch (err) {
         next(err);
     }
