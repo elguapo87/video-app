@@ -3,6 +3,8 @@ import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import ThumbDownOffAltOutlinedIcon from "@mui/icons-material/ThumbDownOffAltOutlined";
 import ReplyOutlinedIcon from "@mui/icons-material/ReplyOutlined";
 import AddTaskOutlinedIcon from "@mui/icons-material/AddTaskOutlined";
+import Comments from "../components/Comments";
+import { assets } from "../assets/assets";
 
 const Container = styled.div`
   display: flex;
@@ -22,7 +24,7 @@ const Title = styled.div`
   font-weight: 400;
   margin-top: 20px;
   margin-bottom: 10px;
-  color: ${({theme}) => theme.text};
+  color: ${({ theme }) => theme.text};
 `
 
 const Details = styled.div`
@@ -32,13 +34,13 @@ const Details = styled.div`
 `
 
 const Info = styled.div`
-  color: ${({theme}) => theme.textSoft};
+  color: ${({ theme }) => theme.textSoft};
 `
 
 const Buttons = styled.div`
   display: flex;
   gap: 20px;
-  color: ${({theme}) => theme.text};
+  color: ${({ theme }) => theme.text};
 `
 
 const Button = styled.button`
@@ -49,15 +51,15 @@ const Button = styled.button`
   border: none;
   outline: none;
   background: transparent;
-  color: ${({theme}) => theme.text};
+  color: ${({ theme }) => theme.text};
 `
 
 const Hr = styled.hr`
-  border: 0.5px solid ${({theme}) => theme.soft};
+  border: 0.5px solid ${({ theme }) => theme.soft};
   margin: 15px 0px;
 `
 
-const Recommendation= styled.div`
+const Recommendation = styled.div`
   flex: 2;
 `
 
@@ -80,7 +82,7 @@ const Image = styled.img`
 const ChannelDetail = styled.div`
   display: flex;
   flex-direction: column;
-  color: ${({theme}) => theme.text};
+  color: ${({ theme }) => theme.text};
 `
 
 const ChannelName = styled.span`
@@ -90,7 +92,7 @@ const ChannelName = styled.span`
 const ChannelCounter = styled.span`
   margin-top: 5px;
   margin-bottom: 20px;
-  color: ${({theme}) => theme.textSoft};
+  color: ${({ theme }) => theme.textSoft};
   font-size: 12px;
 `
 
@@ -114,12 +116,12 @@ const Video = () => {
     <Container>
       <Content>
         <VideoWrapper>
-          <iframe 
-            width="100%" 
-            height="720" 
-            src="https://www.youtube.com/embed/2PVz_nxeR6U" 
-            title="2021 RockShox DebonAir Airspring Upgrade on Lyrik &amp; Pike | RockShox DebonAir Installation Tutorial" 
-            frameborder="0" 
+          <iframe
+            width="100%"
+            height="720"
+            src="https://www.youtube.com/embed/2PVz_nxeR6U"
+            title="2021 RockShox DebonAir Airspring Upgrade on Lyrik &amp; Pike | RockShox DebonAir Installation Tutorial"
+            frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen
           >
@@ -138,7 +140,7 @@ const Video = () => {
         <Hr />
         <Channel>
           <ChannelInfo>
-            <Image src="https://yt3.ggpht.com/yti/APfAmoE-Q0ZLJ4vk3vqmV4Kwp0sbrjxLyB8Q4ZgNsiRH=s88-c-k-c0x00ffffff-no-rj-mo" />
+            <Image src={assets.noavatar} />
             <ChannelDetail>
               <ChannelName>Channel Name</ChannelName>
               <ChannelCounter>200K Subscribers</ChannelCounter>
@@ -152,6 +154,9 @@ const Video = () => {
           </ChannelInfo>
           <Subscribe>SUBSCRIBE</Subscribe>
         </Channel>
+
+        <Hr />
+        <Comments />
       </Content>
 
       <Recommendation>
