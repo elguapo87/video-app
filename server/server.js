@@ -10,11 +10,24 @@ const port = process.env.PORT || 8800;
 
 app.use(cookieParser());
 
-// DB Connection
-connectDB();
+// Middleware
+app.use(express.json());
 
 // Routes
 app.use("/api/auth", authRoute);
+
+// DB Connection
+connectDB();
+
+app.use((err, req, res, next) => {
+    const status = err.status || 500;
+    const message = err.message || "Something went wrong";
+        return res.status(status).json({
+            success: false,
+            status, 
+            message
+        });
+});
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
