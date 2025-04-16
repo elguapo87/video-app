@@ -5,6 +5,7 @@ import ReplyOutlinedIcon from "@mui/icons-material/ReplyOutlined";
 import AddTaskOutlinedIcon from "@mui/icons-material/AddTaskOutlined";
 import Comments from "../components/Comments";
 import { assets } from "../assets/assets";
+import RecommendedVideos from "../components/RecommendedVideos";
 
 const Container = styled.div`
   display: flex;
@@ -159,9 +160,7 @@ const Video = () => {
         <Comments />
       </Content>
 
-      <Recommendation>
-
-      </Recommendation>
+      <RecommendedVideos />
     </Container>
   )
 }
