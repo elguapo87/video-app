@@ -24,18 +24,18 @@ const Container = styled.div`
     }
 `;
 
-const SavedVideos = () => {
+const SavedVideos = () => { 
   const [videos, setVideos] = useState([]);
 
   useEffect(() => {
     const fetchVideos = async () => {
-      try {
-        const res = await apiRequest.get("/users/savedVideos");
-        setVideos(res.data);
-      } catch (err) {
-        console.error("Failed to fetch saved videos:", err);
-      }
-    };
+        try {
+            const res = await apiRequest.get("/users/savedVideos");
+            setVideos(res.data);
+        } catch (err) {
+            console.error("Failed to fetch saved videos:", err);
+        }
+    };  
     fetchVideos();
   }, []);
 

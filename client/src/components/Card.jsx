@@ -140,7 +140,7 @@ const Card = ({ type, video, onUnsave }) => {
       try {
         const res = await apiRequest.get(`/users/find/${video.userId}`);
         setChannel(res.data);
-
+        
       } catch (err) {
         console.error("Failed to fetch channel", err);
       }
@@ -180,30 +180,30 @@ const Card = ({ type, video, onUnsave }) => {
   }
 
   return (
-    <Container type={type}>
-      <Image onClick={handleAddView} type={type} src={video.imgUrl ? video.imgUrl : assets.no_thumbnail} />
-      <Details type={type}>
-        <InfoContainer>
-          <Link to={`/user/${channel._id}`}>
-            <ChannelImage type={type} src={channel?.fromGoogle ? channel?.img : channel.img ? `${url}/images/${channel.img}` : assets.noavatar} />
-          </Link>
-          <Texts>
-            <Title type={type}>{video.title}</Title>
+      <Container type={type}>
+        <Image onClick={handleAddView} type={type} src={video.imgUrl ? video.imgUrl : assets.no_thumbnail} />
+        <Details type={type}>
+          <InfoContainer>
             <Link to={`/user/${channel._id}`}>
-              <ChannelName type={type}>{channel.name}</ChannelName>
+              <ChannelImage type={type} src={channel?.fromGoogle ? channel?.img : channel.img ? `${url}/images/${channel.img}` : assets.noavatar} />
             </Link>
-            <Info type={type}>{video.views} views &bull; {format(video.createdAt)}</Info>
-          </Texts>
-        </InfoContainer>
-        {
-          currentUser
-          &&
-          <AddButton type={type} onClick={saveVideo}>
-            {isSaved ? <StyledRemoveIcon /> : <StyledAddIcon />}
-          </AddButton>
-        }
-      </Details>
-    </Container>
+              <Texts>
+                <Title type={type}>{video.title}</Title>
+                <Link to={`/user/${channel._id}`}>
+                  <ChannelName type={type}>{channel.name}</ChannelName>
+                </Link>   
+                <Info type={type}>{video.views} views &bull; {format(video.createdAt)}</Info>
+              </Texts>
+          </InfoContainer>
+          {
+              currentUser
+                  &&
+            <AddButton type={type} onClick={saveVideo}>    
+              {isSaved ? <StyledRemoveIcon /> : <StyledAddIcon />}
+            </AddButton>
+          }
+        </Details>
+      </Container>
   )
 }
 
