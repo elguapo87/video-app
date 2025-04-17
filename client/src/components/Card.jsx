@@ -1,6 +1,10 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
+import apiRequest, { url } from "../lib/apiRequest";
+import { format } from "timeago.js";
 import { assets } from "../assets/assets";
+import { useSelector } from "react-redux";
 import LibraryAddOutlinedIcon from '@mui/icons-material/LibraryAddOutlined';
 
 const Container = styled.div`
@@ -114,38 +118,52 @@ const StyledAddIcon = styled(LibraryAddOutlinedIcon)`
   }
 `;
 
-const Card = ({ type }) => {
 
-    const navigate = useNavigate()
+const Card = ({ type, video }) => {
+  const [channel, setChannel] = useState([]);
+  
+  const { currentUser } = useSelector((state) => state.user);
 
-    const currentUser = true;
+  useEffect(() => {
+    const fetchChannel = async () => {
+      try {
+        const res = await apiRequest.get(`/users/find/${video.userId}`);
+        setChannel(res.data);
+        
+      } catch (err) {
+        console.error("Failed to fetch channel", err);
+      }
+    };
+    fetchChannel();
+  }, [video.userId]);
 
-    return (
-        <Container type={type}>
-            <Image onClick={() => navigate("/video/7455")} type={type} src={assets.no_thumbnail} />
-            <Details type={type}>
-                <InfoContainer>
-                    <Link to="/">
-                        <ChannelImage type={type} src={assets.noavatar} />
-                    </Link>
-                    <Texts>
-                        <Title type={type}>Video Title</Title>
-                        <Link to="/">
-                            <ChannelName type={type}>Channel Name</ChannelName>
-                        </Link>
-                        <Info type={type}>views &bull; 15k</Info>
-                    </Texts>
-                </InfoContainer>
-                {
-                    currentUser
-                    &&
-                    <AddButton type={type}>
-                        <StyledAddIcon />
-                    </AddButton>
-                }
-            </Details>
-        </Container>
-    )
+
+  return (
+      <Container type={type}>
+        <Image type={type} src={video.imgUrl ? video.imgUrl : assets.no_thumbnail} />
+        <Details type={type}>
+          <InfoContainer>
+            <Link to={`/user/${channel._id}`}>
+              <ChannelImage type={type} src={channel?.fromGoogle ? channel?.img : channel.img ? `${url}/images/${channel.img}` : assets.noavatar} />
+            </Link>
+              <Texts>
+                <Title type={type}>{video.title}</Title>
+                <Link to={`/user/${channel._id}`}>
+                  <ChannelName type={type}>{channel.name}</ChannelName>
+                </Link>   
+                <Info type={type}>{video.views} views &bull; {format(video.createdAt)}</Info>
+              </Texts>
+          </InfoContainer>
+          {
+              currentUser
+                  &&
+            <AddButton type={type}>    
+              <StyledAddIcon />
+            </AddButton>
+          }
+        </Details>
+      </Container>
+  )
 }
 
 export default Card
