@@ -2,8 +2,9 @@ import "dotenv/config";
 import express from "express";
 import { connectDB } from "./config/db.js";
 import cookieParser from "cookie-parser";
-import authRoute from "./routes/authRoute.js";
 import cors from "cors";
+import authRoute from "./routes/authRoute.js";
+import userRoute from "./routes/userRoute.js";
 
 // Initialize Express
 const app = express();
@@ -20,6 +21,7 @@ app.use(cors({
 
 // Routes
 app.use("/api/auth", authRoute);
+app.use("/api/users", userRoute);
 
 // DB Connection
 connectDB();

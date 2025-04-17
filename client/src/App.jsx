@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import { useState } from 'react';
 import { darkTheme, lightTheme } from './utils/theme';
 import Video from './pages/Video';
+import UpdateProfile from './pages/UpdateProfile';
 
 const Container = styled.div`
   display: flex;
@@ -43,6 +44,7 @@ const App = () => {
             <Route index path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/video/:id" element={<Video />} />
+            <Route path="/update/:id" element={<UpdateProfile />} />
           </Routes>
         </Main>
       </Container>
