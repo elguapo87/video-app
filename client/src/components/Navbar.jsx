@@ -168,7 +168,8 @@ const StyledLogoutIcon = styled(LogoutIcon)`
 
 const Navbar = ({ menuOpen, setMenuOpen, setVideoOpen }) => {
   const { currentUser } = useSelector((state) => state.user);
-
+  const [q, setQ] = useState("");
+    
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
@@ -197,8 +198,8 @@ const Navbar = ({ menuOpen, setMenuOpen, setVideoOpen }) => {
         </NavLeft>
 
         <SearchBox>
-            <Input placeholder="Search..." />
-            <StyledSearchIcon />
+            <Input placeholder="Search..." onChange={(e) => setQ(e.target.value)} />
+            <StyledSearchIcon onClick={() => navigate(`/search?q=${q}`)} />
         </SearchBox>
 
         <NavRight>

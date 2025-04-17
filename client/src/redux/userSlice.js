@@ -29,6 +29,30 @@ export const userSlice = createSlice({
         updateUserSuccess: (state, action) => {
             state.currentUser = { ...state.currentUser, ...action.payload };
         },
+        subscription: (state, action) => {
+            if (state.currentUser.subscribedChannels.includes(action.payload)) {
+                state.currentUser.subscribedChannels.splice(
+                    state.currentUser.subscribedChannels.findIndex(
+                        (channelId) => channelId === action.payload
+                    ),
+                    1
+                );
+
+            } else {
+                state.currentUser.subscribedChannels.push(action.payload);
+            }
+        },
+        toggleSaveVideo: (state, action) => {
+            const videoId = action.payload;
+            if (state.currentUser.savedVideos.includes(videoId)) {
+                state.currentUser.savedVideos = state.currentUser.savedVideos.filter(
+                    (id) => id !== videoId
+                );
+
+            } else {
+                state.currentUser.savedVideos.push(videoId);
+            }
+        }
     },
 });
 

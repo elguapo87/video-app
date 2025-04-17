@@ -1,4 +1,5 @@
 import userModel from "../models/userModel.js";
+import videoModel from "../models/videoModel.js";;
 import { createError } from "../error.js";
 import path from "path";
 import fs from "fs";
@@ -10,6 +11,7 @@ export const updateUser = async (req, res, next) => {
             const user = await userModel.findById(req.params.id);
 
             if (user) {
+                // If a new image is uploaded, delete the old one and add the new one
                 if (req.file) {
                     // Delete the old image if it exists
                     if (user.img) {
@@ -47,6 +49,7 @@ export const updateUser = async (req, res, next) => {
                 next(createError(404, "User not found!"));
             }
 
+
         } catch (err) {
             next(err);
         }
@@ -55,7 +58,6 @@ export const updateUser = async (req, res, next) => {
         next(createError(403, "You can update only your account!"));
     }
 };
-
 
 export const getUser = async (req, res, next) => {
     try {
@@ -66,7 +68,6 @@ export const getUser = async (req, res, next) => {
         next(err);
     }
 };
-
 
 export const deleteUser = async (req, res, next) => {
     if (req.params.id === req.user.id) {
@@ -97,6 +98,116 @@ export const deleteUser = async (req, res, next) => {
 
     } else {
         next(createError(403, "You can delete only your account!"))
+    }
+};
+
+export const subscribe = async (req, res, next) => {
+    try {
+        await userModel.findByIdAndUpdate(req.user.id, {
+            $push: { subscribedChannels: req.params.id }
+        });
+        await userModel.findByIdAndUpdate(req.params.id, {
+            $inc: { subscribers: 1 }
+        });
+
+        res.status(200).json("Subscription successfull.");
+
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const unsubscribe = async (req, res, next) => {
+    try {
+        await userModel.findByIdAndUpdate(req.user.id, {
+            $pull: { subscribedChannels: req.params.id }
+        });
+        await userModel.findByIdAndUpdate(req.params.id, {
+            $inc: { subscribers: -1 }
+        });
+
+        res.status(200).json("Unsubscription successfull.");
+
+    } catch (err) {
+        next(err);
+    }
+};
+
+
+export const likeVideo = async (req, res, next) => {
+    const userId = req.user.id;
+    const videoId = req.params.videoId;
+
+    try {
+        await videoModel.findByIdAndUpdate(videoId, {
+            $addToSet: { likes: userId },
+            $pull: { dislikes: userId }
+        });
+
+        res.status(200).json("The video has been liked.");
+
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const dislikeVideo = async (req, res, next) => {
+    const userId = req.user.id;
+    const videoId = req.params.videoId;
+
+    try {
+        await videoModel.findByIdAndUpdate(videoId, {
+            $addToSet: { dislikes: userId },
+            $pull: { likes: userId }
+        });
+
+        res.status(200).json("The video has been disliked.");
+
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const saveVideo = async (req, res, next) => {
+    const videoId = req.params.videoId;
+    const userId = req.user.id;
+
+    try {
+        // Find if the video is already saved by the user
+        const user = await userModel.findById(userId);
+
+        if (user.savedVideos.includes(videoId)) {
+            // If the video is already saved, remove it
+            await userModel.findByIdAndUpdate(userId, {
+                $pull: { savedVideos: videoId }
+            });
+
+            res.status(200).json({ message: "Video removed from saved list" });
+
+        } else {
+            // If the video is not saved, add it
+            await userModel.findByIdAndUpdate(userId, {
+                $push: { savedVideos: videoId }
+            });
+
+            res.status(200).json({ message: "Video saved" });
+        }
+
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const getSavedVideos = async (req, res, next) => {
+    try {
+        const user = await userModel.findById(req.user.id);
+        const savedList = user.savedVideos;
+
+        const videos = await videoModel.find({ _id: { $in: savedList } });
+        res.status(200).json(videos);
+
+    } catch (err) {
+        next(err);
     }
 };
 
