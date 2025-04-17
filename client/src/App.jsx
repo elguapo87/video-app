@@ -41,7 +41,10 @@ const App = () => {
         </MenuContainer>
         <Main className={menuOpen ? "narrow" : "wide"}>
           <Routes>
-            <Route index path="/" element={<Home />} />
+            <Route index path="/" element={<Home type="random" />} />
+            <Route path="/trend" element={<Home type="trend" />} />
+            <Route path="/sub" element={<Home type="sub" />} />
+            <Route path="/videos" element={<Home type="tags" />} />
             <Route path="/login" element={<Login />} />
             <Route path="/video/:id" element={<Video />} />
             <Route path="/update/:id" element={<UpdateProfile />} />
