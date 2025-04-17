@@ -1,12 +1,16 @@
-import { Route, Routes } from 'react-router-dom';
+import { useState } from 'react'
 import styled, { ThemeProvider } from "styled-components";
+import { darkTheme, lightTheme } from "./utils/Theme";
+import Menu from "./components/Menu";
 import Home from './pages/Home';
-import Menu from './components/Menu';
-import Login from "./pages/Login";
-import { useState } from 'react';
-import { darkTheme, lightTheme } from './utils/theme';
-import Video from './pages/Video';
+import Video from "./pages/Video";
+import { Route, Routes } from 'react-router-dom';
+import Login from './pages/Login';
+import CurrentUserProfile from './pages/CurrentUserProfile';
+import Search from './pages/Search';
 import UpdateProfile from './pages/UpdateProfile';
+import SavedVideos from './components/SavedVideos';
+import UpdateVideo from './pages/UpdateVideo';
 
 const Container = styled.div`
   display: flex;
@@ -29,7 +33,6 @@ const Main = styled.div`
 `;
 
 const App = () => {
-
   const [darkMode, setDarkMode] = useState(true);
   const [menuOpen, setMenuOpen] = useState(true);
 
@@ -38,7 +41,7 @@ const App = () => {
       <Container>
         <MenuContainer>
           <Menu darkMode={darkMode} setDarkMode={setDarkMode} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
-        </MenuContainer>
+        </MenuContainer>        
         <Main className={menuOpen ? "narrow" : "wide"}>
           <Routes>
             <Route index path="/" element={<Home type="random" />} />
@@ -47,11 +50,17 @@ const App = () => {
             <Route path="/videos" element={<Home type="tags" />} />
             <Route path="/login" element={<Login />} />
             <Route path="/video/:id" element={<Video />} />
+            <Route path="/user/:id" element={<CurrentUserProfile />} />
+            <Route path="/search" element={<Search />} />
             <Route path="/update/:id" element={<UpdateProfile />} />
+            <Route path="/updateVideo/:id" element={<UpdateVideo />} />
+            <Route path="/savedVideos" element={<SavedVideos />} />   
           </Routes>
         </Main>
       </Container>
     </ThemeProvider>
+
+
   )
 }
 
