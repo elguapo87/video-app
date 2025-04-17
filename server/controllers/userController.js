@@ -99,3 +99,4 @@ export const deleteUser = async (req, res, next) => {
         next(createError(403, "You can delete only your account!"))
     }
 };
+

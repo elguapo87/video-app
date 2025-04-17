@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import authRoute from "./routes/authRoute.js";
 import userRoute from "./routes/userRoute.js";
+import videoRoute from "./routes/videoRoute.js";
 
 // Initialize Express
 const app = express();
@@ -22,6 +23,7 @@ app.use(cors({
 // Routes
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
+app.use("/api/videos", videoRoute);
 
 // DB Connection
 connectDB();
