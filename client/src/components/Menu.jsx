@@ -14,6 +14,9 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import SettingsBrightnessOutlinedIcon from "@mui/icons-material/SettingsBrightnessOutlined";
 import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
+import Upload from "./Upload";
+import { useSelector } from "react-redux";
+import { useState } from "react";
 
 
 const MenuWrapper = styled.div`
@@ -45,7 +48,7 @@ const Item = styled.div`
   padding: max(0.5vw, 3px) 0px;
 
   &:hover {
-    background: ${({theme}) => theme.soft};
+    background: ${({ theme }) => theme.soft};
   }
 `;
 
@@ -89,12 +92,14 @@ const Title = styled.h2`
 `;
 
 const Menu = ({ darkMode, setDarkMode, menuOpen, setMenuOpen }) => {
-    const currentUser = false;
+    const { currentUser } = useSelector((state) => state.user);
+    const [videoOpen, setVideoOpen] = useState(false);
 
     return (
         <>
             <MenuWrapper>
-                <Navbar menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+                <Navbar menuOpen={menuOpen} setMenuOpen={setMenuOpen} setVideoOpen={setVideoOpen} />
+
 
                 <Container className={menuOpen ? "mobile-menu active" : "mobile-menu"}>
                     <Link to="/">
@@ -141,7 +146,7 @@ const Menu = ({ darkMode, setDarkMode, menuOpen, setMenuOpen }) => {
                         <>
                             <Login>
                                 Sign in to like videos, comment and subscribe.
-                                <Link to="/"><Button><StyledAccountIcon />Login</Button></Link>
+                                <Link to="/login"><Button><StyledAccountIcon />Login</Button></Link>
                             </Login>
                             <Hr />
                         </>
@@ -190,6 +195,7 @@ const Menu = ({ darkMode, setDarkMode, menuOpen, setMenuOpen }) => {
                     </Item>
                 </Container>
             </MenuWrapper>
+            {videoOpen && <Upload setVideoOpen={setVideoOpen} />}
         </>
     )
 }

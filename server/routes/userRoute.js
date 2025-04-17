@@ -1,7 +1,7 @@
 import express from "express";
 import multer from "multer";
 import { verifyToken } from "../verifyToken.js";
-import { updateUser } from "../controllers/userController.js";
+import { deleteUser, getUser, updateUser } from "../controllers/userController.js";
 
 // Multer config
 const storage = multer.diskStorage({
