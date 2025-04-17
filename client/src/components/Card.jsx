@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import apiRequest, { url } from "../lib/apiRequest";
 import { format } from "timeago.js";
 import { assets } from "../assets/assets";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleSaveVideo } from "../redux/userSlice";
 import LibraryAddOutlinedIcon from '@mui/icons-material/LibraryAddOutlined';
+import BookmarkRemoveOutlinedIcon from '@mui/icons-material/BookmarkRemoveOutlined';
 
 const Container = styled.div`
     width: 100%;
@@ -118,11 +120,20 @@ const StyledAddIcon = styled(LibraryAddOutlinedIcon)`
   }
 `;
 
+const StyledRemoveIcon = styled(BookmarkRemoveOutlinedIcon)`
+  &.MuiSvgIcon-root {
+      width: max(1.5vw, 20px);
+      height: max(1.5vw, 20px);
+  }
+`;
 
-const Card = ({ type, video }) => {
+const Card = ({ type, video, onUnsave }) => {
   const [channel, setChannel] = useState([]);
-  
+  const navigate = useNavigate();
+  const [isSaved, setIsSaved] = useState(false);
+
   const { currentUser } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchChannel = async () => {
@@ -137,10 +148,40 @@ const Card = ({ type, video }) => {
     fetchChannel();
   }, [video.userId]);
 
+  const handleAddView = async () => {
+    try {
+      await apiRequest.put(`/videos/view/${video._id}`);
+      navigate(`/video/${video._id}`);
+
+    } catch (err) {
+      console.error("Failed to add view", err);
+    }
+  };
+
+  useEffect(() => {
+    if (currentUser?.savedVideos.includes(video._id)) {
+      setIsSaved(true);
+    }
+  }, [currentUser, video._id]);
+
+  const saveVideo = async () => {
+    try {
+      await apiRequest.put(`/users/saveVideo/${video._id}`);
+      setIsSaved(!isSaved);
+      dispatch(toggleSaveVideo(video._id));
+
+      if (isSaved && onUnsave) {
+        onUnsave(video._id);
+      }
+
+    } catch (err) {
+      console.error("Failed to save/unsave video:", err);
+    }
+  }
 
   return (
       <Container type={type}>
-        <Image type={type} src={video.imgUrl ? video.imgUrl : assets.no_thumbnail} />
+        <Image onClick={handleAddView} type={type} src={video.imgUrl ? video.imgUrl : assets.no_thumbnail} />
         <Details type={type}>
           <InfoContainer>
             <Link to={`/user/${channel._id}`}>
@@ -157,8 +198,8 @@ const Card = ({ type, video }) => {
           {
               currentUser
                   &&
-            <AddButton type={type}>    
-              <StyledAddIcon />
+            <AddButton type={type} onClick={saveVideo}>    
+              {isSaved ? <StyledRemoveIcon /> : <StyledAddIcon />}
             </AddButton>
           }
         </Details>
