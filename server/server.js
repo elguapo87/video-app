@@ -18,14 +18,17 @@ app.use(cookieParser());
 
 // Middleware
 app.use(express.json());
+// app.use(cors({
+//     origin: 'http://localhost:5173', 
+//     credentials: true
+//   }));
 
-app.use(cors({
+  app.use(cors({
     origin: 'https://video-app-client-hk9e.onrender.com', 
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization", "Set-Cookie"],
     methods: ["GET", "POST", "PUT", "DELETE"]
 }));
-
 
 app.use("/images", express.static("uploads"));
 

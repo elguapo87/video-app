@@ -179,8 +179,6 @@ const Card = ({ type, video, onUnsave }) => {
     }
   }
 
-  console.log(`${url}/images/${channel.img}`)
-
   return (
     <Container type={type}>
       <Image onClick={handleAddView} type={type} src={video.imgUrl ? video.imgUrl : assets.no_thumbnail} />
