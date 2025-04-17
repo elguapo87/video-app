@@ -137,35 +137,35 @@ const Upload = ({ setVideoOpen, urlType }) => {
   }, [img]);
 
   const handleUpload = async (e) => {
-      e.preventDefault();
+    e.preventDefault();
 
-      if (!video) {
-        setError("Please select a video.");
-        return;
-      }
+    if (!video) {
+      setError("Please select a video.");
+      return;
+    }
 
-      if (!inputs.title) {
-        setError("Please provide a title.");
-        return;
-      }
+    if (!inputs.title) {
+      setError("Please provide a title.");
+      return;
+    }
 
-      if (!inputs.description) {
-        setError("Please provide a description.");
-        return;
-      }
+    if (!inputs.description) {
+      setError("Please provide a description.");
+      return;
+    }
 
-      if (!img) {
-        setError("Please provide a thumbnail image.");
-        return;
-      }
-      
-      try {
-        const res = await apiRequest.post("/videos", { ...inputs, tags });
-        setVideoOpen(false);
-        res.status === 200 && navigate(`/video/${res.data._id}`);
-      } catch (err) {
-        setError(err.response.data.message);
-      }
+    if (!img) {
+      setError("Please provide a thumbnail image.");
+      return;
+    }
+
+    try {
+      const res = await apiRequest.post("/videos", { ...inputs, tags });
+      setVideoOpen(false);
+      res.status === 200 && navigate(`/video/${res.data._id}`);
+    } catch (err) {
+      setError(err.response.data.message);
+    }
   }
 
   return (
@@ -175,23 +175,23 @@ const Upload = ({ setVideoOpen, urlType }) => {
         <Title>Upload a New Video</Title>
         <Label>Video:</Label>
         {
-          videoPerc > 0 
-              ?
-          ("Uploading:" + videoPerc + "%")
-              :
-          (<Input type="file" accept="videos/*" onChange={(e) => setVideo(e.target.files[0])} />)
-          
+          videoPerc > 0
+            ?
+            ("Uploading:" + videoPerc + "%")
+            :
+            (<Input type="file" accept="videos/*" onChange={(e) => setVideo(e.target.files[0])} />)
+
         }
         <Input type="text" placeholder="Title" name="title" onChange={handleChange} required />
         <Desc placeholder="Description" rows={8} name="description" onChange={handleChange}></Desc>
         <Input type="text" placeholder="Separate the tags with commas." onChange={handleTags} />
         <Label>Image:</Label>
         {
-          imgPerc > 0 
-              ?
-          ("Uploading:" + imgPerc + "%")
-              :
-          (<Input type="file" accept="image/*" onChange={(e) => setImg(e.target.files[0])} required />)
+          imgPerc > 0
+            ?
+            ("Uploading:" + imgPerc + "%")
+            :
+            (<Input type="file" accept="image/*" onChange={(e) => setImg(e.target.files[0])} required />)
         }
         {error && <span className="error-message">{error}</span>}
         <Button onClick={handleUpload}>Upload</Button>

@@ -240,49 +240,49 @@ const Video = () => {
     }
   };
 
-   const handleSub = async () => {
-      if (currentVideo?.userId !== currentUser?._id) {
-          if (currentUser) {
-            try {
-              if (currentUser.subscribedChannels.includes(channel._id)) {
-                await apiRequest.put(`/users/unsub/${channel._id}`);
-    
-              } else {
-                await apiRequest.put(`/users/sub/${channel._id}`);
-              }
-              dispatch(subscription(channel._id));
-    
-            } catch (error) {
-              console.error("Error subscribing to this channel!:", err);
-            }
-    
+  const handleSub = async () => {
+    if (currentVideo?.userId !== currentUser?._id) {
+      if (currentUser) {
+        try {
+          if (currentUser.subscribedChannels.includes(channel._id)) {
+            await apiRequest.put(`/users/unsub/${channel._id}`);
+
           } else {
-            alert("Please log in to subscribe.");
+            await apiRequest.put(`/users/sub/${channel._id}`);
           }
+          dispatch(subscription(channel._id));
+
+        } catch (error) {
+          console.error("Error subscribing to this channel!:", err);
+        }
 
       } else {
-         alert("You can't subscribe to your own channel!");
+        alert("Please log in to subscribe.");
       }
+
+    } else {
+      alert("You can't subscribe to your own channel!");
+    }
   };
 
   return (
     <Container>
       <Content>
-  
-          <VideoFrame src={currentVideo?.videoUrl} controls />
+
+        <VideoFrame src={currentVideo?.videoUrl} controls />
 
 
         {
-            currentVideo?.userId === currentUser?._id
-                      &&
-            <Link to={`/updateVideo/${currentVideo?._id}`}><EditVideo>Edit Video</EditVideo></Link>
-          } 
+          currentVideo?.userId === currentUser?._id
+          &&
+          <Link to={`/updateVideo/${currentVideo?._id}`}><EditVideo>Edit Video</EditVideo></Link>
+        }
 
         <Title>{currentVideo?.title}</Title>
 
         <Details>
           <Info>{currentVideo?.views} {currentVideo?.views === 1 ? "view" : "views"} &bull; {format(currentVideo?.createdAt)}</Info>
-        
+
           <Buttons>
             <Button onClick={handleLike}>
               {currentUser && currentVideo?.likes.includes(currentUser._id)
@@ -311,16 +311,16 @@ const Video = () => {
               </VideoDesc>
             </ChannelDetail>
           </ChannelInfo>
-          
+
           <Subscribe onClick={handleSub}>
             {
-              currentUser && currentUser.subscribedChannels.includes(channel._id) 
-                                      ?
-                                  "SUBSCRIBED"
-                                      :
-                                  "SUBSCRIBE"
+              currentUser && currentUser.subscribedChannels.includes(channel._id)
+                ?
+                "SUBSCRIBED"
+                :
+                "SUBSCRIBE"
             }
-            
+
           </Subscribe>
         </Channel>
         <Hr />

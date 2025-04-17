@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import apiRequest, { url } from "../lib/apiRequest";
-import { updateUserSuccess } from "../redux/userSlice";
+import { loginFailure, loginStart, loginSuccess, updateUserSuccess } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
@@ -16,7 +16,7 @@ const Container = styled.div`
   @media (max-width: 750px) {
     
   }
-`;  
+`;
 
 const Wrapper = styled.div`
   display: flex;
@@ -106,82 +106,82 @@ const CancelImage = styled.p`
 `;
 
 const UpdateProfile = () => {
-    const { currentUser } = useSelector((state) => state.user);
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [img, setImg] = useState(null);
-    const dispatch = useDispatch();
-    const [error, setError] = useState("");
-    const imageInputRef = useRef(null);
-    
-    const navigate = useNavigate();
+  const { currentUser } = useSelector((state) => state.user);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [img, setImg] = useState(null);
+  const dispatch = useDispatch();
+  const [error, setError] = useState("");
+  const imageInputRef = useRef(null);
 
-    const handleUpdate = async (e) => {
-      e.preventDefault();
-      const formData = new FormData();
+  const navigate = useNavigate();
 
-      if (name) formData.append("name", name);
-      else formData.append("name", currentUser.name);
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
 
-      if (email) formData.append("email", email);
-      else formData.append("email", currentUser.email);
+    if (name) formData.append("name", name);
+    else formData.append("name", currentUser.name);
 
-      if (password) formData.append("password", password)
+    if (email) formData.append("email", email);
+    else formData.append("email", currentUser.email);
 
-      if (img) {
-        formData.append("image", img);
-      }
+    if (password) formData.append("password", password)
 
-      try {
-        const res = await apiRequest.put(`/users/${currentUser._id}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        });
-        dispatch(updateUserSuccess(res.data))
-        navigate(`/user/${currentUser._id}`);
+    if (img) {
+      formData.append("image", img);
+    }
 
-      } catch (err) {
-        setError(err.response.data.message);
-      }
-    };
+    try {
+      const res = await apiRequest.put(`/users/${currentUser._id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      dispatch(updateUserSuccess(res.data))
+      navigate(`/user/${currentUser._id}`);
+
+    } catch (err) {
+      setError(err.response.data.message);
+    }
+  };
 
 
-    const handleCancelImage = () => {
-      setImg(null);
-      imageInputRef.current.value = "";
-    };
+  const handleCancelImage = () => {
+    setImg(null);
+    imageInputRef.current.value = "";
+  };
 
-    return (
-        <Container>
-            <Wrapper>
-                <Close onClick={() => navigate(`/user/${currentUser._id}`)}>X</Close>
-                <Title>Edit Profile</Title>
-                <ProfileImageContainer>
-                  {img ? (
-                    <>
-                        <ProfileImage src={URL.createObjectURL(img)} alt="New profile preview" />
-                        <CancelImage onClick={handleCancelImage}>x</CancelImage>
-                    </>
-                  ) : (
-                    currentUser.img && (
-                        <>
-                            <ProfileImage src={currentUser.img ? `${url}/images/${currentUser.img}` : assets.noavatar} alt="Current profile image" />
-                            <CancelImage onClick={handleCancelImage}>x</CancelImage>
-                        </>
-                    )
-                  )}
-                </ProfileImageContainer>
-                <ImageInput ref={imageInputRef} onChange={(e) => setImg(e.target.files[0])} type="file" accept="image/*" id="image" />
-                <Input placeholder="username" onChange={(e) => setName(e.target.value)} defaultValue={currentUser.name} />
-                <Input placeholder="email" onChange={(e) => setEmail(e.target.value)} defaultValue={currentUser.email} />
-                <Input type="password" placeholder="password" onChange={(e) => setPassword(e.target.value)} defaultValue={currentUser.password} />
-                {error && <span className="error-message">{error}</span>}
-                <Button onClick={handleUpdate}>Update Profile</Button>
-            </Wrapper>
-        </Container>
-    )
+  return (
+    <Container>
+      <Wrapper>
+        <Close onClick={() => navigate(`/user/${currentUser._id}`)}>X</Close>
+        <Title>Edit Profile</Title>
+        <ProfileImageContainer>
+          {img ? (
+            <>
+              <ProfileImage src={URL.createObjectURL(img)} alt="New profile preview" />
+              <CancelImage onClick={handleCancelImage}>x</CancelImage>
+            </>
+          ) : (
+            currentUser.img && (
+              <>
+                <ProfileImage src={currentUser.img ? `${url}/images/${currentUser.img}` : assets.noavatar} alt="Current profile image" />
+                <CancelImage onClick={handleCancelImage}>x</CancelImage>
+              </>
+            )
+          )}
+        </ProfileImageContainer>
+        <ImageInput ref={imageInputRef} onChange={(e) => setImg(e.target.files[0])} type="file" accept="image/*" id="image" />
+        <Input placeholder="username" onChange={(e) => setName(e.target.value)} defaultValue={currentUser.name} />
+        <Input placeholder="email" onChange={(e) => setEmail(e.target.value)} defaultValue={currentUser.email} />
+        <Input type="password" placeholder="password" onChange={(e) => setPassword(e.target.value)} defaultValue={currentUser.password} />
+        {error && <span className="error-message">{error}</span>}
+        <Button onClick={handleUpdate}>Update Profile</Button>
+      </Wrapper>
+    </Container>
+  )
 }
 
 export default UpdateProfile

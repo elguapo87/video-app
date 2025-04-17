@@ -4,7 +4,7 @@ import SearchIcon from "@mui/icons-material/Search"
 import VideoCallOutlinedIcon from "@mui/icons-material/VideoCallOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import LogoutIcon from '@mui/icons-material/Logout';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import apiRequest, { url } from '../lib/apiRequest';
 import { logout } from '../redux/userSlice';

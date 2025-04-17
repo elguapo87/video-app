@@ -86,18 +86,18 @@ const UpdateVideo = ({ urlType }) => {
   const [tags, setTags] = useState([]);
   const [error, setError] = useState("");
   const { currentVideo } = useSelector((state) => state.video);
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
     if (currentVideo) {
-        setInputs({
-            title: currentVideo.title,
-            description: currentVideo.description,
-            videoUrl: currentVideo.videoUrl,
-            imgUrl: currentVideo.imgUrl,
-        });
-        setTags(currentVideo.tags);
+      setInputs({
+        title: currentVideo.title,
+        description: currentVideo.description,
+        videoUrl: currentVideo.videoUrl,
+        imgUrl: currentVideo.imgUrl,
+      });
+      setTags(currentVideo.tags);
     }
   }, [currentVideo]);
 
@@ -138,25 +138,25 @@ const UpdateVideo = ({ urlType }) => {
   }, [img]);
 
   const handleUpdate = async (e) => {
-      e.preventDefault();
+    e.preventDefault();
 
-      if (!inputs.title) {
-        setError("Please provide a title.");
-        return;
-      }
-  
-      if (!inputs.description) {
-        setError("Please provide a description.");
-        return;
-      }
-      
-      try {
-        const res = await apiRequest.put(`/videos/${currentVideo._id}`, { ...inputs, tags });
-        res.status === 200 && navigate(`/video/${res.data._id}`);
+    if (!inputs.title) {
+      setError("Please provide a title.");
+      return;
+    }
 
-      } catch (err) {
-        setError(err.response.data.message);
-      }
+    if (!inputs.description) {
+      setError("Please provide a description.");
+      return;
+    }
+
+    try {
+      const res = await apiRequest.put(`/videos/${currentVideo._id}`, { ...inputs, tags });
+      res.status === 200 && navigate(`/video/${res.data._id}`);
+
+    } catch (err) {
+      setError(err.response.data.message);
+    }
   }
 
   return (
@@ -166,23 +166,23 @@ const UpdateVideo = ({ urlType }) => {
         <Title>Edit video</Title>
         <Label>Video:</Label>
         {
-          videoPerc > 0 
-              ?
-          ("Uploading:" + videoPerc + "%")
-              :
-          (<Input type="file" accept="videos/*" onChange={(e) => setVideo(e.target.files[0])} />)
-          
+          videoPerc > 0
+            ?
+            ("Uploading:" + videoPerc + "%")
+            :
+            (<Input type="file" accept="videos/*" onChange={(e) => setVideo(e.target.files[0])} />)
+
         }
         <Input type="text" placeholder="Title" name="title" defaultValue={currentVideo?.title} onChange={handleChange} required />
         <Desc placeholder="Description" rows={8} name="description" defaultValue={currentVideo?.description} onChange={handleChange}></Desc>
         <Input type="text" placeholder="Separate the tags with commas." defaultValue={currentVideo?.tags} onChange={handleTags} />
         <Label>Image:</Label>
         {
-          imgPerc > 0 
-              ?
-          ("Uploading:" + imgPerc + "%")
-              :
-          (<Input type="file" accept="image/*" onChange={(e) => setImg(e.target.files[0])} />)
+          imgPerc > 0
+            ?
+            ("Uploading:" + imgPerc + "%")
+            :
+            (<Input type="file" accept="image/*" onChange={(e) => setImg(e.target.files[0])} />)
         }
         {error && <span className="error-message">{error}</span>}
         <Button onClick={handleUpdate}>Update</Button>

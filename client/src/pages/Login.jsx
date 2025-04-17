@@ -18,7 +18,7 @@ const Container = styled.div`
   @media (max-width: 750px) {
     
   }
-`;  
+`;
 
 const Wrapper = styled.div`
   display: flex;
@@ -107,118 +107,118 @@ const CancelImage = styled.p`
 `;
 
 const Login = () => {
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [img, setImg] = useState(null);
-    const dispatch = useDispatch();
-    const [loginError, setLoginError] = useState("");
-    const [signInError, setSignInError] = useState("");
-    const imageInputRef = useRef(null);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [img, setImg] = useState(null);
+  const dispatch = useDispatch();
+  const [loginError, setLoginError] = useState("");
+  const [signInError, setSignInError] = useState("");
+  const imageInputRef = useRef(null);
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const handleLogin = async (e) => {
-      e.preventDefault();
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
-      dispatch(loginStart());
+    dispatch(loginStart());
 
-      try {
-        const res = await apiRequest.post("/auth/signin", {
-          name,
-          password
-        });
-        dispatch(loginSuccess(res.data));
-        navigate("/");
+    try {
+      const res = await apiRequest.post("/auth/signin", {
+        name,
+        password
+      });
+      dispatch(loginSuccess(res.data));
+      navigate("/");
 
-      } catch (err) {
-        dispatch(loginFailure());
-        setLoginError(err.response.data.message);
-      }    
-    };
+    } catch (err) {
+      dispatch(loginFailure());
+      setLoginError(err.response.data.message);
+    }
+  };
 
-    const handleSignUp = async (e) => {
-      e.preventDefault();
-      const formData = new FormData();
-      formData.append("name", name);
-      formData.append("email", email),
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("email", email),
       formData.append("password", password);
-      if (img) {
-        formData.append("image", img);
-      }
+    if (img) {
+      formData.append("image", img);
+    }
 
-      try {
-        await apiRequest.post("/auth/signup", formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        });
-        handleLogin(e);
+    try {
+      await apiRequest.post("/auth/signup", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      handleLogin(e);
 
-      } catch (err) {
-        setSignInError(err.response.data.message);
-      }
-    };
+    } catch (err) {
+      setSignInError(err.response.data.message);
+    }
+  };
 
-    const signInWithGoogle = async () => {
-      dispatch(loginStart());
-      signInWithPopup(auth, provider)
-        .then((result) => {
-          apiRequest.post("/auth/google", {
-            name: result.user.displayName,
-            email: result.user.email,
-            img: result.user.photoURL  
-          })
+  const signInWithGoogle = async () => {
+    dispatch(loginStart());
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        apiRequest.post("/auth/google", {
+          name: result.user.displayName,
+          email: result.user.email,
+          img: result.user.photoURL
+        })
           .then((res) => {
             dispatch(loginSuccess(res.data));
             navigate("/");
           })
-        })
-        .catch((error) => {
-          dispatch(loginFailure());
-        });
-    };
+      })
+      .catch((error) => {
+        dispatch(loginFailure());
+      });
+  };
 
-    const handleCancelImage = () => {
-      setImg(null);
-      imageInputRef.current.value = "";
-    };
+  const handleCancelImage = () => {
+    setImg(null);
+    imageInputRef.current.value = "";
+  };
 
-    return (
-        <Container>
-            <Wrapper>
-                <Close onClick={() => navigate("/")}>X</Close>
-                <Title>Sign in</Title>
-                <SubTitle>to subscribe to PGTube</SubTitle>
-                <Input placeholder="username" onChange={(e) => setName(e.target.value)} />
-                <Input type="password" placeholder="password" onChange={(e) => setPassword(e.target.value)} />
-                {loginError && <span className="error-message">{loginError}</span>}
-                <Button onClick={handleLogin}>Sign in</Button>
-                <Title>or</Title>
-                <Button onClick={signInWithGoogle}>Signin with google</Button>
-                <Title>or</Title>
-                <ProfileImageContainer>
-                  {img && <ProfileImage src={URL.createObjectURL(img)} />}
-                  {img && <CancelImage onClick={handleCancelImage}>x</CancelImage>}  
-                </ProfileImageContainer>
-                <ImageInput ref={imageInputRef} onChange={(e) => setImg(e.target.files[0])} type="file" accept="image/*" id="image" />
-                <Input placeholder="username" onChange={(e) => setName(e.target.value)} />
-                <Input placeholder="email" onChange={(e) => setEmail(e.target.value)} />
-                <Input type="password" onChange={(e) => setPassword(e.target.value)} placeholder="password" />
-                {signInError && <span className="error-message">{signInError}</span>}
-                <Button onClick={handleSignUp}>Sign up</Button>
-            </Wrapper>
+  return (
+    <Container>
+      <Wrapper>
+        <Close onClick={() => navigate("/")}>X</Close>
+        <Title>Sign in</Title>
+        <SubTitle>to subscribe to PGTube</SubTitle>
+        <Input placeholder="username" onChange={(e) => setName(e.target.value)} />
+        <Input type="password" placeholder="password" onChange={(e) => setPassword(e.target.value)} />
+        {loginError && <span className="error-message">{loginError}</span>}
+        <Button onClick={handleLogin}>Sign in</Button>
+        <Title>or</Title>
+        <Button onClick={signInWithGoogle}>Signin with google</Button>
+        <Title>or</Title>
+        <ProfileImageContainer>
+          {img && <ProfileImage src={URL.createObjectURL(img)} />}
+          {img && <CancelImage onClick={handleCancelImage}>x</CancelImage>}
+        </ProfileImageContainer>
+        <ImageInput ref={imageInputRef} onChange={(e) => setImg(e.target.files[0])} type="file" accept="image/*" id="image" />
+        <Input placeholder="username" onChange={(e) => setName(e.target.value)} />
+        <Input placeholder="email" onChange={(e) => setEmail(e.target.value)} />
+        <Input type="password" onChange={(e) => setPassword(e.target.value)} placeholder="password" />
+        {signInError && <span className="error-message">{signInError}</span>}
+        <Button onClick={handleSignUp}>Sign up</Button>
+      </Wrapper>
 
-            <More>
-                English(USA)
-                <Links>
-                    <Link>Help</Link>
-                    <Link>Privacy</Link>
-                    <Link>Terms</Link>
-                </Links>
-            </More>
-        </Container>
-    )
+      <More>
+        English(USA)
+        <Links>
+          <Link>Help</Link>
+          <Link>Privacy</Link>
+          <Link>Terms</Link>
+        </Links>
+      </More>
+    </Container>
+  )
 }
 
 export default Login

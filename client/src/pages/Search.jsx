@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import apiRequest from "../lib/apiRequest";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Card from "../components/Card";
 import styled from "styled-components";
 

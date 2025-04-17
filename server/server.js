@@ -12,7 +12,7 @@ dotenv.config();
 
 // App Config
 const app = express();
-const port = 8800;
+const port = process.env.PORT || 8800;
 
 app.use(cookieParser());
 

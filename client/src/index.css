@@ -8,6 +8,7 @@
 
 body {
     min-height: 100vh;
+    /* background: #181818; */
     font-family: "Roboto", sans-serif;
 }
 
@@ -15,7 +16,6 @@ a {
     text-decoration: none;
     color: inherit;
 }
-
 
 .mobile-menu {
     position: absolute;
@@ -28,7 +28,6 @@ a {
    left: 0;
 }
 
-
 .narrow {
     padding-left: 90px; 
     flex: 5;
@@ -38,4 +37,8 @@ a {
 .wide {
     flex: 12;
     transition: all 0.8s ease;
+}
+
+.error-message {
+    color: #ec1b1b;
 }

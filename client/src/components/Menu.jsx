@@ -12,12 +12,11 @@ import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
 import VideoCameraBackOutlinedIcon from '@mui/icons-material/VideoCameraBackOutlined';
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SettingsBrightnessOutlinedIcon from "@mui/icons-material/SettingsBrightnessOutlined";
-import { Link } from "react-router-dom";
-import Navbar from "./Navbar";
-import Upload from "./Upload";
-import { useSelector } from "react-redux";
 import { useState } from "react";
-
+import Navbar from "./Navbar";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import Upload from "./Upload";
 
 const MenuWrapper = styled.div`
     display: flex;
@@ -100,8 +99,8 @@ const Menu = ({ darkMode, setDarkMode, menuOpen, setMenuOpen }) => {
             <MenuWrapper>
                 <Navbar menuOpen={menuOpen} setMenuOpen={setMenuOpen} setVideoOpen={setVideoOpen} />
 
-
                 <Container className={menuOpen ? "mobile-menu active" : "mobile-menu"}>
+
                     <Link to="/">
                         <Item>
                             <HomeOutlinedIcon />
@@ -152,37 +151,37 @@ const Menu = ({ darkMode, setDarkMode, menuOpen, setMenuOpen }) => {
                         </>
                     }
                     <Title>BEST OF PGTube</Title>
-                    <Link to="/">
+                    <Link to="/videos?tags=music,metal,house,trance">
                         <Item>
                             <LibraryMusicOutlinedIcon />
                             Music
                         </Item>
                     </Link>
-                    <Link to="/">
+                    <Link to="/videos?tags=sport,mtb,fight">
                         <Item>
                             <SportsBasketballOutlinedIcon />
                             Sports
                         </Item>
                     </Link>
-                    <Link to="/">
+                    <Link to="/videos?tags=gaming,pc,console,computer">
                         <Item>
                             <SportsEsportsOutlinedIcon />
                             Gaming
                         </Item>
                     </Link>
-                    <Link to="/">
+                    <Link to="/videos?tags=movies,movie,hollywood,action,horror,comedy">
                         <Item>
                             <MovieOutlinedIcon />
                             Movies
                         </Item>
                     </Link>
-                    <Link to="/">
+                    <Link to="/videos?tags=news,world,cnn">
                         <Item>
                             <ArticleOutlinedIcon />
                             News
                         </Item>
                     </Link>
-                    <Link to="/">
+                    <Link to="/videos?tags=documentary,history,war">
                         <Item>
                             <VideoCameraBackOutlinedIcon />
                             Documentary
