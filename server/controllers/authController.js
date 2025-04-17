@@ -45,12 +45,12 @@ export const signIn = async (req, res, next) => {
 
         const { password, ...others } = user._doc;
 
-        res.cookie("access_token", token, { 
-            httpOnly: true, 
+        res.cookie("access_token", token, {
+            httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax'
         }).status(200).json(others);
-        
+
     } catch (err) {
         next(err);
     }
@@ -74,21 +74,23 @@ export const googleAuth = async (req, res, next) => {
     try {
         const user = await userModel.findOne({ email: req.body.email });
         if (user) {
-            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-                expiresIn: '1h'
-            });
+            // existing user
+            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
             res.cookie("access_token", token, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "lax",
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
                 path: "/"
             }).status(200).json(user._doc);
+
         } else {
+            // new user
             const newUser = new userModel({ ...req.body, fromGoogle: true });
             const savedUser = await newUser.save();
-            const token = jwt.sign({ id: savedUser._id }, process.env.JWT_SECRET, {
-                expiresIn: '1h'
-            });
+
+            const token = jwt.sign({ id: savedUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
             res.cookie("access_token", token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
