@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import styled, { ThemeProvider } from "styled-components";
-import { darkTheme, lightTheme } from "./utils/Theme";
+import { darkTheme, lightTheme } from "./utils/theme";
 import Menu from "./components/Menu";
 import Home from './pages/Home';
 import Video from "./pages/Video";
