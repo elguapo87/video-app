@@ -55,3 +55,47 @@ export const updateUser = async (req, res, next) => {
         next(createError(403, "You can update only your account!"));
     }
 };
+
+
+export const getUser = async (req, res, next) => {
+    try {
+        const user = await userModel.findById(req.params.id);
+        res.status(200).json(user._doc);
+
+    } catch (err) {
+        next(err);
+    }
+};
+
+
+export const deleteUser = async (req, res, next) => {
+    if (req.params.id === req.user.id) {
+        try {
+            const user = await userModel.findById(req.params.id);
+
+            if (user) {   
+                if (user.img) {
+                    const oldImagePath = path.join("uploads", user.img);
+                    fs.unlink(oldImagePath, (err) => {
+                        if (err) {
+                            console.error(`Failed to delete old image: ${oldImagePath}`, err);
+                        }
+                    });
+                }
+                
+                await userModel.findByIdAndDelete(req.params.id);
+
+                res.status(200).json("User has been deleted.");
+
+            } else {
+                next(createError(404, "User not found!"));
+            }
+
+        } catch (err) {
+            next(err);
+        }
+
+    } else {
+        next(createError(403, "You can delete only your account!"))
+    }
+};
