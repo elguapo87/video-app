@@ -23,11 +23,9 @@ app.use(express.json());
 //     credentials: true
 //   }));
 
-  app.use(cors({
-    origin: 'https://video-app-client-37wz.onrender.com', 
+app.use(cors({
+    origin: 'https://video-app-client-37wz.onrender.com',
     credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization", "Set-Cookie"],
-    methods: ["GET", "POST", "PUT", "DELETE"]
 }));
 
 app.use("/images", express.static("uploads"));
@@ -43,11 +41,11 @@ connectDB();
 app.use((err, req, res, next) => {
     const status = err.status || 500;
     const message = err.message || "Something went wrong";
-        return res.status(status).json({
-            success: false,
-            status, 
-            message
-        });
+    return res.status(status).json({
+        success: false,
+        status,
+        message
+    });
 });
 
 app.listen(port, () => {
